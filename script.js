@@ -18,10 +18,13 @@ const translations = {
         items: {
           f1: 'Polyester Fabric',
           f1Sub: 'High-quality polyester, wear-resistant',
+          f1Alt: 'Polyester fabric sample',
           f2: 'Blended Fabric',
           f2Sub: 'Cotton-polyester blend, comfortable & durable',
+          f2Alt: 'Blended fabric sample',
           f3: 'Printed Fabric',
-          f3Sub: 'Fashion prints, vibrant colors'
+          f3Sub: 'Fashion prints, vibrant colors',
+          f3Alt: 'Printed fabric sample'
         }
       },
       category2: {
@@ -30,10 +33,13 @@ const translations = {
         items: {
           t1: 'Curtain Fabric',
           t1Sub: 'Light-blocking, excellent drape',
+          t1Alt: 'Curtain fabric sample',
           t2: 'Upholstery Fabric',
           t2Sub: 'Abrasion-resistant, soft touch',
+          t2Alt: 'Upholstery fabric sample',
           t3: 'Bedding Fabric',
-          t3Sub: 'Skin-friendly, breathable & cozy'
+          t3Sub: 'Skin-friendly, breathable & cozy',
+          t3Alt: 'Bedding fabric sample'
         }
       },
       category3: {
@@ -42,10 +48,13 @@ const translations = {
         items: {
           s1: 'Sports Shoes',
           s1Sub: 'Lightweight & breathable',
+          s1Alt: 'Sports shoes sample',
           s2: 'Casual Shoes',
           s2Sub: 'Versatile style for daily wear',
+          s2Alt: 'Casual shoes sample',
           s3: 'Knitted Slippers',
-          s3Sub: 'Cozy knitted, soft & warm'
+          s3Sub: 'Cozy knitted, soft & warm',
+          s3Alt: 'Knitted slippers sample'
         }
       }
     },
@@ -63,6 +72,9 @@ const translations = {
       feature4Title: 'Global Logistics',
       feature4Desc: 'Covering Central Asia, Middle East, Africa'
     },
+    seo: {
+      title: 'SHAOXING CHENGYUE TEXTILE CO., LTD'
+    },
     contact: {
       label: 'Contact us',
       title: 'Request quotes and cooperation',
@@ -72,6 +84,11 @@ const translations = {
     },
     footer: {
       rights: 'All rights reserved.'
+    },
+    ui: {
+      menuOpen: 'Close menu',
+      menuClose: 'Menu',
+      viewImage: 'View image'
     }
   },
   zh: {
@@ -93,10 +110,13 @@ const translations = {
         items: {
           f1: '涤纶面料',
           f1Sub: '高品质涤纶，耐磨抗皱',
+          f1Alt: '涤纶面料样品展示',
           f2: '混纺面料',
           f2Sub: '棉涤混纺，舒适耐用',
+          f2Alt: '混纺面料样品展示',
           f3: '印花面料',
-          f3Sub: '时尚印花，色彩鲜艳'
+          f3Sub: '时尚印花，色彩鲜艳',
+          f3Alt: '印花面料样品展示'
         }
       },
       category2: {
@@ -105,10 +125,13 @@ const translations = {
         items: {
           t1: '窗帘面料',
           t1Sub: '遮光隔热，垂感优越',
+          t1Alt: '窗帘面料样品展示',
           t2: '沙发布料',
           t2Sub: '耐磨防污，触感细腻',
+          t2Alt: '沙发布料样品展示',
           t3: '床上用品面料',
-          t3Sub: '亲肤柔软，透气舒适'
+          t3Sub: '亲肤柔软，透气舒适',
+          t3Alt: '床上用品面料样品展示'
         }
       },
       category3: {
@@ -117,10 +140,13 @@ const translations = {
         items: {
           s1: '运动鞋',
           s1Sub: '轻便透气，运动舒适',
+          s1Alt: '运动鞋样品展示',
           s2: '休闲鞋',
           s2Sub: '百搭款式，日常出行',
+          s2Alt: '休闲鞋样品展示',
           s3: '针织拖鞋',
-          s3Sub: '舒适针织，柔软保暖'
+          s3Sub: '舒适针织，柔软保暖',
+          s3Alt: '针织拖鞋样品展示'
         }
       }
     },
@@ -138,6 +164,9 @@ const translations = {
       feature4Title: '全球物流',
       feature4Desc: '覆盖中亚、中东、非洲'
     },
+    seo: {
+      title: '绍兴成跃纺织品有限公司'
+    },
     contact: {
       label: '联系我们',
       title: '获取报价与合作',
@@ -147,6 +176,11 @@ const translations = {
     },
     footer: {
       rights: '版权所有。'
+    },
+    ui: {
+      menuOpen: '关闭菜单',
+      menuClose: '菜单',
+      viewImage: '查看图片'
     }
   }
 };
@@ -166,7 +200,10 @@ function updateLanguage(lang) {
   document.querySelectorAll('[data-i18n-alt]').forEach((element) => {
     const key = element.dataset.i18nAlt;
     const value = key.split('.').reduce((obj, part) => obj && obj[part], bundle);
-    if (value) element.setAttribute('aria-label', value);
+    if (value) {
+      element.setAttribute('aria-label', value);
+      if (element.tagName === 'IMG') element.alt = value;
+    }
   });
   // Toggle language-specific inline elements
   document.querySelectorAll('.lang-zh').forEach((el) => {
@@ -177,17 +214,26 @@ function updateLanguage(lang) {
   });
 
   // Strictly set document title according to language
-  document.title =
-    lang === 'zh'
-      ? '绍兴成跃纺织品有限公司'
-      : 'SHAOXING CHENGYUE TEXTILE CO., LTD';
+  document.title = bundle.seo.title;
+
+  // Update mobile menu aria-label
+  const menuToggle = document.getElementById('menuToggle');
+  const nav = document.querySelector('.site-nav');
+  if (menuToggle && nav) {
+    const isMenuOpen = nav.classList.contains('open');
+    menuToggle.setAttribute('aria-label', isMenuOpen ? bundle.ui.menuOpen : bundle.ui.menuClose);
+  }
+
+  // Update product card aria-labels
+  document.querySelectorAll('.product-card-image').forEach((el) => {
+    el.setAttribute('aria-label', bundle.ui.viewImage);
+  });
 
   langToggle.textContent = lang === 'zh' ? 'EN' : '中文';
 }
 
 function detectDefaultLanguage() {
-  const locale = navigator.language || navigator.userLanguage || 'en';
-  return locale.startsWith('zh') ? 'zh' : 'en';
+  return (navigator.language || 'en').startsWith('zh') ? 'zh' : 'en';
 }
 
 function initLanguage() {
@@ -200,15 +246,31 @@ langToggle.addEventListener('click', () => {
   updateLanguage(nextLang);
 });
 
+let carouselInterval;
+
 function initCarousel() {
   const slides = document.querySelectorAll('.carousel-slide');
+  const carousel = document.querySelector('.carousel');
   let index = 0;
 
-  setInterval(() => {
-    slides[index].classList.remove('active');
-    index = (index + 1) % slides.length;
-    slides[index].classList.add('active');
-  }, 5000);
+  function startTimer() {
+    carouselInterval = setInterval(() => {
+      slides[index].classList.remove('active');
+      index = (index + 1) % slides.length;
+      slides[index].classList.add('active');
+    }, 5000);
+  }
+
+  startTimer();
+
+  if (carousel) {
+    carousel.addEventListener('mouseenter', () => {
+      clearInterval(carouselInterval);
+    });
+    carousel.addEventListener('mouseleave', () => {
+      startTimer();
+    });
+  }
 }
 
 function setFooterYear() {
@@ -240,12 +302,15 @@ const galleries = {
   }
 };
 
-const lbState = { images: [], current: 0 };
+const lbState = { images: [], current: 0, triggerEl: null };
 
 function initLightbox() {
   const container = document.createElement('div');
   container.className = 'lightbox';
   container.id = 'lightbox';
+  container.setAttribute('role', 'dialog');
+  container.setAttribute('aria-modal', 'true');
+  container.setAttribute('aria-label', 'Image gallery');
   container.innerHTML = `
     <div class="lightbox-overlay"></div>
     <button class="lightbox-close" aria-label="Close">&times;</button>
@@ -274,28 +339,46 @@ function initLightbox() {
   const counterEl = container.querySelector('.lightbox-counter');
   const thumbsEl = container.querySelector('.lightbox-thumbnails');
 
+  const focusableEls = [closeBtn, prevBtn, nextBtn];
+
   let transitioning = false;
 
-  function open(galleryKey, index) {
+  function trapFocus(e) {
+    if (e.key !== 'Tab') return;
+    const first = focusableEls[0];
+    const last = focusableEls[focusableEls.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  }
+
+  function open(galleryKey, index, triggerEl) {
     const gallery = galleries[galleryKey];
     if (!gallery) return;
+    lbState.triggerEl = triggerEl || null;
     lbState.images = gallery.images;
     lbState.current = index;
     loadImage(index);
     renderThumbs();
     container.classList.add('open');
     document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', trapFocus);
+    closeBtn.focus();
   }
 
   function close() {
     container.classList.remove('open');
     document.body.style.overflow = '';
+    document.removeEventListener('keydown', trapFocus);
+    if (lbState.triggerEl) lbState.triggerEl.focus();
   }
 
   function loadImage(index) {
     const src = lbState.images[index];
     imgEl.classList.remove('loaded', 'slide-in', 'slide-out');
-    imgEl.src = '';
+    imgEl.removeAttribute('src');
     spinner.style.display = '';
 
     const img = new Image();
@@ -305,9 +388,9 @@ function initLightbox() {
       spinner.style.display = 'none';
     };
     img.onerror = () => {
-      imgEl.src = src;
-      imgEl.classList.add('loaded');
       spinner.style.display = 'none';
+      imgEl.alt = 'Image failed to load';
+      imgEl.classList.add('loaded');
     };
     img.src = src;
 
@@ -368,7 +451,15 @@ function initLightbox() {
       const card = el.closest('.product-card');
       const galleryKey = card.dataset.gallery;
       const index = parseInt(card.dataset.index, 10);
-      open(galleryKey, index);
+      open(galleryKey, index, el);
+    });
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('role', 'button');
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        el.click();
+      }
     });
   });
 
@@ -459,8 +550,10 @@ function initMobileMenu() {
   if (!toggle || !nav) return;
 
   toggle.addEventListener('click', () => {
-    nav.classList.toggle('open');
+    const open = nav.classList.toggle('open');
     toggle.classList.toggle('open');
+    const bundle = translations[currentLanguage];
+    toggle.setAttribute('aria-label', open ? bundle.ui.menuOpen : bundle.ui.menuClose);
   });
 
   nav.querySelectorAll('a').forEach((link) => {

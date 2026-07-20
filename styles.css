@@ -14,6 +14,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* reserve space for sticky header during in-page anchor scrolling */
 }
 
 * {
@@ -66,8 +67,7 @@ a {
 .site-header.scrolled {
   border-bottom-color: #e5e7eb;
   box-shadow: 0 1px 8px rgba(15, 23, 42, 0.06);
-  padding-top: 0.65rem;
-  padding-bottom: 0.65rem;
+  /* keep overall header height stable to avoid layout shifts during smooth scrolling */
 }
 
 .brand {
